@@ -50,7 +50,7 @@ const signUp = async (req, res, next) => {
     });
 
     // Send verification email
-    const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.SERVER_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     await sendEmail({
       to: email,
@@ -94,10 +94,12 @@ const signIn = async (req, res, next) => {
       return next(new ErrorResponse('Invalid email and password.', 401));
     }
 
+    if (!user.verified) return next(new ErrorResponse('Email is not verified!', 401));
+
     // IF 2FA is disable
     //* * JWT Token */
     const objJwt = { id: user.id, email: user.vEmail };
-    const accessToken = jwtLibrary.jwtSign(objJwt, 'Access Token');
+    const accessToken = jwtLibrary.jwtSign(objJwt);
 
     return res.status(200).send({
       status: 'success',
@@ -126,6 +128,8 @@ const verifyEmail = async (req, res) => {
 
     user.verified = true;
     await user.save();
+
+    return res.redirect(process.env.CLIENT_URL)
 
     res.status(200).json({
       success: true,

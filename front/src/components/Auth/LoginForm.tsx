@@ -40,7 +40,9 @@ export function LoginForm() {
         theme: "light",
         });
       sessionStorage.setItem("token",response.data?.AccessToken);
-      navigate("/booking");
+      setTimeout(() => {
+        navigate("/booking");
+      }, 1500);
 
     } catch (error) {
       console.error("Login failed:", error);

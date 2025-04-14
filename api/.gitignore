@@ -3,8 +3,3 @@ package-lock.json
 temp
 .env
 *.log
-.editorconfig
-.eslintignore
-.eslintrc.js
-.eslintcache
-prettier.config.js

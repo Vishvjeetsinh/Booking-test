@@ -10,10 +10,13 @@ import axios from "axios";
 import { useState } from "react";
 import { API_URL } from "../../../constant";
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 
 export function SignUpForm() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   
   const form = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -26,6 +29,7 @@ export function SignUpForm() {
   });
 
   const onSubmit = async (data: SignUpFormData) => {
+
     try {
       setLoading(true);
       const response = await axios.post(`${API_URL}/auth/sign-up`, data);
@@ -40,6 +44,11 @@ export function SignUpForm() {
               progress: undefined,
               theme: "light",
               });
+              setTimeout(() => {
+                navigate("/login");
+              }, 1500);
+
+
     } catch (error) {
       console.error("Signup failed:", error);
         toast.error(error.response.data?.message ?? "Somthing went wrong", {
